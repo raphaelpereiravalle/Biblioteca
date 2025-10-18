@@ -1,3 +1,4 @@
+using Biblioteca.Application.Common;
 using Biblioteca.Application.DTOs;
 using Biblioteca.Application.Interfaces;
 using Biblioteca.Domain.Entities;
@@ -10,8 +11,29 @@ public class AssuntoService : IAssuntoService
     private readonly IRepository<Assunto> _repo;
     public AssuntoService(IRepository<Assunto> repo) => _repo = repo;
 
-    public async Task<IEnumerable<AssuntoDto>> GetAllAsync() =>
-        (await _repo.GetAllAsync()).Select(a => new AssuntoDto { IdAssunto = a.IdAssunto, Descricao = a.Descricao });
+    public async Task<PagedResult<AssuntoDto>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+    {
+        var ListaAssunto = await _repo.GetAllAsync();
+        var total = ListaAssunto.Count();
+
+        var items = ListaAssunto
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(a => new AssuntoDto
+            {
+                IdAssunto = a.IdAssunto,
+                Descricao = a.Descricao
+            })
+            .ToList();
+
+        return new PagedResult<AssuntoDto>
+        {
+            Items = items,
+            TotalCount = total,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+    }
 
     public async Task<AssuntoDto?> GetByIdAsync(int id)
     {

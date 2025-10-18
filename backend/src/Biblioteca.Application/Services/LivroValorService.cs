@@ -1,3 +1,4 @@
+using Biblioteca.Application.Common;
 using Biblioteca.Application.DTOs;
 using Biblioteca.Application.Interfaces;
 using Biblioteca.Domain.Entities;
@@ -10,8 +11,31 @@ public class LivroValorService : ILivroValorService
     private readonly IRepository<LivroValor> _repo;
     public LivroValorService(IRepository<LivroValor> repo) => _repo = repo;
 
-    public async Task<IEnumerable<LivroValorDto>> GetAllAsync() =>
-        (await _repo.GetAllAsync()).Select(v => new LivroValorDto { IdLivroValor = v.IdLivroValor, IdLivro = v.IdLivro, TipoVenda = v.TipoVenda, Valor = v.Valor });
+    public async Task<PagedResult<LivroValorDto>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+    {
+        var all = await _repo.GetAllAsync();
+        var total = all.Count();
+
+        var items = all
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(v => new LivroValorDto
+            {
+                IdLivroValor = v.IdLivroValor,
+                IdLivro = v.IdLivro,
+                TipoVenda = v.TipoVenda,
+                Valor = v.Valor
+            })
+            .ToList();
+
+        return new PagedResult<LivroValorDto>
+        {
+            Items = items,
+            TotalCount = total,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+    }
 
     public async Task<LivroValorDto?> GetByIdAsync(int id)
     {

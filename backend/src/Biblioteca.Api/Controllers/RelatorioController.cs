@@ -17,7 +17,7 @@ public class RelatorioController : ControllerBase
         _env = env;
     }
 
-    [HttpGet]
+    [HttpGet("relatorio")]
     public async Task<IActionResult> Get()
     {
         var dados = await _context.Livros
@@ -37,7 +37,7 @@ public class RelatorioController : ControllerBase
         return Ok(dados);
     }
 
-    [HttpGet("livros-valores")]
+    [HttpGet("exportar")]
     public async Task<IActionResult> Exportar([FromQuery] string formato = "PDF")
     {
         var dados = await _context.LivroValores

@@ -1,3 +1,4 @@
+using Biblioteca.Application.Common;
 using Biblioteca.Application.DTOs;
 using Biblioteca.Application.Interfaces;
 using Biblioteca.Domain.Entities;
@@ -8,10 +9,32 @@ namespace Biblioteca.Application.Services;
 public class AutorService : IAutorService
 {
     private readonly IRepository<Autor> _repo;
+
     public AutorService(IRepository<Autor> repo) => _repo = repo;
 
-    public async Task<IEnumerable<AutorDto>> GetAllAsync() =>
-        (await _repo.GetAllAsync()).Select(a => new AutorDto { IdAutor = a.IdAutor, Nome = a.Nome });
+    public async Task<PagedResult<AutorDto>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+    {
+        var ListaAutor = await _repo.GetAllAsync();
+        var total = ListaAutor.Count();
+
+        var items = ListaAutor
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(a => new AutorDto
+            {
+                IdAutor = a.IdAutor,
+                Nome = a.Nome
+            })
+            .ToList();
+
+        return new PagedResult<AutorDto>
+        {
+            Items = items,
+            TotalCount = total,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+    }
 
     public async Task<AutorDto?> GetByIdAsync(int id)
     {

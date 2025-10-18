@@ -31,10 +31,21 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<BibliotecaContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped<ILivroService, LivroService>();
 
+
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IAssuntoService, AssuntoService>();
+builder.Services.AddScoped<IAutorService, AutorService>();
+builder.Services.AddScoped<ILivroService, LivroService>();
+builder.Services.AddScoped<ILivroValorService, LivroValorService>();
+
+
+builder.Services.AddValidatorsFromAssemblyContaining<AssuntoDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<AutorDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<LivroValorDtoValidator>();
+
+
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 

@@ -19,10 +19,10 @@ public class LivroController : ControllerBase
         _logger = logger;
     }
 
-    // GET: api/livro
-    [HttpGet]
+    [HttpGet("listar-livros")]
     [ProducesResponseType(typeof(PagedResult<LivroDto>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Get([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+    public async Task<IActionResult> ListarLivros([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         try
         {
@@ -36,12 +36,11 @@ public class LivroController : ControllerBase
         }
     }
 
-    // GET: api/livro/{id}
-    [HttpGet("{id:int}")]
+    [HttpGet("obter-livro/{id:int}")]
     [ProducesResponseType(typeof(LivroDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> ObetarLivroPorId(int id)
     {
         try
         {
@@ -58,12 +57,11 @@ public class LivroController : ControllerBase
         }
     }
 
-    // POST: api/livro
-    [HttpPost]
+    [HttpPost("manter-livro")]
     [ProducesResponseType(typeof(LivroDto), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> Post([FromBody] LivroDto dto)
+    public async Task<IActionResult> ManterLivro([FromBody] LivroDto dto)
     {
         try
         {
@@ -71,7 +69,7 @@ public class LivroController : ControllerBase
                 return ValidationProblem(ModelState);
 
             var livro = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = livro.IdLivro }, livro);
+            return CreatedAtAction(nameof(ObetarLivroPorId), new { id = livro.IdLivro }, livro);
         }
         catch (Exception ex)
         {
@@ -80,13 +78,12 @@ public class LivroController : ControllerBase
         }
     }
 
-    // PUT: api/livro/{id}
-    [HttpPut("{id:int}")]
+    [HttpPut("editar-livro/{id:int}")]
     [ProducesResponseType(typeof(LivroDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> Put(int id, [FromBody] LivroDto dto)
+    public async Task<IActionResult> EditarLivro(int id, [FromBody] LivroDto dto)
     {
         try
         {
@@ -106,12 +103,11 @@ public class LivroController : ControllerBase
         }
     }
 
-    // DELETE: api/livro/{id}
-    [HttpDelete("{id:int}")]
+    [HttpDelete("deletar-livro/{id:int}")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> DeletarLivro(int id)
     {
         try
         {
