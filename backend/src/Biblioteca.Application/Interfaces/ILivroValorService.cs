@@ -5,9 +5,9 @@ namespace Biblioteca.Application.Interfaces;
 
 public interface ILivroValorService
 {
-    Task<PagedResult<LivroValorDto>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
-    Task<LivroValorDto?> GetByIdAsync(int id);
-    Task<LivroValorDto> CreateAsync(LivroValorDto dto);
-    Task<LivroValorDto> UpdateAsync(int id, LivroValorDto dto);
-    Task DeleteAsync(int id);
+    Task<ApiResponse<PagedResult<LivroValorDto>>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
+    Task<ApiResponse<LivroValorDto?>> GetByIdAsync(int id);
+    Task<ApiResponse<LivroValorDto>> CreateAsync(LivroValorDto dto);
+    Task<ApiResponse<LivroValorDto>> UpdateAsync(int id, LivroValorDto dto);
+    Task<ApiResponse<bool>> DeleteAsync(int id);
 }

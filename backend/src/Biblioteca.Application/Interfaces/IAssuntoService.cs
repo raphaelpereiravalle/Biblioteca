@@ -5,9 +5,9 @@ namespace Biblioteca.Application.Interfaces;
 
 public interface IAssuntoService
 {
-    Task<PagedResult<AssuntoDto>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
-    Task<AssuntoDto?> GetByIdAsync(int id);
-    Task<AssuntoDto> CreateAsync(AssuntoDto dto);
-    Task<AssuntoDto> UpdateAsync(int id, AssuntoDto dto);
-    Task DeleteAsync(int id);
+    Task<ApiResponse<PagedResult<AssuntoDto>>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
+    Task<ApiResponse<AssuntoDto?>> GetByIdAsync(int id);
+    Task<ApiResponse<AssuntoDto>> CreateAsync(AssuntoDto dto);
+    Task<ApiResponse<AssuntoDto>> UpdateAsync(int id, AssuntoDto dto);
+    Task<ApiResponse<bool>> DeleteAsync(int id);
 }

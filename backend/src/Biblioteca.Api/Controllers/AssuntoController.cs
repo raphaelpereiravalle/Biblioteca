@@ -68,7 +68,7 @@ public class AssuntoController : ControllerBase
                 return ValidationProblem(ModelState);
 
             var assunto = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(ObterAssuntoDtoPorId), new { id = assunto.IdAssunto }, assunto);
+            return CreatedAtAction(nameof(ObterAssuntoDtoPorId), new { id = assunto.Data.IdAssunto }, assunto);
         }
         catch (Exception ex)
         {

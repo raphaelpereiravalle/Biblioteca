@@ -23,7 +23,7 @@ public class AssuntoServiceTests
         _repo.Setup(r => r.CreateAsync(It.IsAny<Assunto>())).ReturnsAsync(new Assunto(1, input.Descricao));
 
         var result = await _svc.CreateAsync(input);
-        Assert.Equal(1, result.IdAssunto);
-        Assert.Equal("Processo Civil", result.Descricao);
+        Assert.Equal(1, result.Data.IdAssunto);
+        Assert.Equal("Processo Civil", result.Data.Descricao);
     }
 }

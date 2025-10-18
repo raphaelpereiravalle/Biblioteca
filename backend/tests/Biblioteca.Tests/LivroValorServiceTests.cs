@@ -23,9 +23,9 @@ public class LivroValorServiceTests
         _repo.Setup(r => r.CreateAsync(It.IsAny<LivroValor>())).ReturnsAsync(new LivroValor { IdLivroValor = 7, IdLivro = 10, TipoVenda = "Digital", Valor = 59.90m });
 
         var result = await _svc.CreateAsync(input);
-        Assert.Equal(7, result.IdLivroValor);
-        Assert.Equal(10, result.IdLivro);
-        Assert.Equal("Digital", result.TipoVenda);
-        Assert.Equal(59.90m, result.Valor);
+        Assert.Equal(7, result.Data.IdLivroValor);
+        Assert.Equal(10, result.Data.IdLivro);
+        Assert.Equal("Digital", result.Data.TipoVenda);
+        Assert.Equal(59.90m, result.Data.Valor);
     }
 }

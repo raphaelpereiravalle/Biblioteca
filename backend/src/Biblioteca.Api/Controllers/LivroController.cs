@@ -69,7 +69,7 @@ public class LivroController : ControllerBase
                 return ValidationProblem(ModelState);
 
             var livro = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(ObetarLivroPorId), new { id = livro.IdLivro }, livro);
+            return CreatedAtAction(nameof(ObetarLivroPorId), new { id = livro.Data.IdLivro }, livro);
         }
         catch (Exception ex)
         {

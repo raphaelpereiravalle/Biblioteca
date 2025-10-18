@@ -23,7 +23,7 @@ public class AutorServiceTests
         _repo.Setup(r => r.CreateAsync(It.IsAny<Autor>())).ReturnsAsync(new Autor(1, input.Nome));
 
         var result = await _svc.CreateAsync(input);
-        Assert.Equal(1, result.IdAutor);
-        Assert.Equal("Machado de Assis", result.Nome);
+        Assert.Equal(1, result.Data.IdAutor);
+        Assert.Equal("Machado de Assis", result.Data.Nome);
     }
 }

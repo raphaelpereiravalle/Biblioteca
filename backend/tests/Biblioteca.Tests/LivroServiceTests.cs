@@ -19,7 +19,7 @@ public class LivroServiceTests
         var dto = new LivroDto { Titulo = "Teste Jurídico" };
         var result = await service.CreateAsync(dto);
 
-        Assert.Equal(1, result.IdLivro);
-        Assert.Equal("Teste Jurídico", result.Titulo);
+        Assert.Equal(1, result.Data.IdLivro);
+        Assert.Equal("Teste Jurídico", result.Data.Titulo);
     }
 }

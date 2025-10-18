@@ -69,7 +69,7 @@ public class AutorController : ControllerBase
                 return ValidationProblem(ModelState);
 
             var autor = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = autor.IdAutor }, autor);
+            return CreatedAtAction(nameof(GetById), new { id = autor.Data.IdAutor }, autor);
         }
         catch (Exception ex)
         {

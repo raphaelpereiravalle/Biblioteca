@@ -12,7 +12,7 @@ public class LivroService : ILivroService
 
     public LivroService(IRepository<Livro> repo) => _repo = repo;
 
-    public async Task<PagedResult<LivroDto>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+    public async Task<ApiResponse<PagedResult<LivroDto>>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
     {
         if (pageNumber <= 0) pageNumber = 1;
         if (pageSize <= 0) pageSize = 10;
@@ -33,19 +33,30 @@ public class LivroService : ILivroService
             })
             .ToList();
 
-        return new PagedResult<LivroDto>
+        var pagedResult = new PagedResult<LivroDto>
         {
             Items = livros,
             TotalCount = total,
             PageNumber = pageNumber,
             PageSize = pageSize
         };
+
+        return ApiResponse<PagedResult<LivroDto>>.Ok(
+            pagedResult,
+            total > 0
+                ? $"Foram encontrados {total} livros."
+                : "Nenhum livro encontrado."
+        );
     }
 
-    public async Task<LivroDto?> GetByIdAsync(int id)
+    public async Task<ApiResponse<LivroDto?>> GetByIdAsync(int id)
     {
         var l = await _repo.GetByIdAsync(id);
-        return l == null ? null : new LivroDto
+
+        if (l == null)
+            return ApiResponse<LivroDto?>.NotFound($"Livro com ID {id} não encontrado.");
+
+        var dto = new LivroDto
         {
             IdLivro = l.IdLivro,
             Titulo = l.Titulo,
@@ -53,9 +64,11 @@ public class LivroService : ILivroService
             Edicao = l.Edicao,
             AnoPublicacao = l.AnoPublicacao
         };
+
+        return ApiResponse<LivroDto?>.Ok(dto, "Livro encontrado com sucesso.");
     }
 
-    public async Task<LivroDto> CreateAsync(LivroDto dto)
+    public async Task<ApiResponse<LivroDto>> CreateAsync(LivroDto dto)
     {
         var entity = new Livro
         {
@@ -66,10 +79,10 @@ public class LivroService : ILivroService
         };
         var created = await _repo.CreateAsync(entity);
         dto.IdLivro = created.IdLivro;
-        return dto;
+        return ApiResponse<LivroDto>.Created(dto, "Autor criado com sucesso.");
     }
 
-    public async Task<LivroDto> UpdateAsync(int id, LivroDto dto)
+    public async Task<ApiResponse<LivroDto>> UpdateAsync(int id, LivroDto dto)
     {
         var entity = await _repo.GetByIdAsync(id);
         if (entity == null) throw new KeyNotFoundException("Livro não encontrado.");
@@ -80,8 +93,16 @@ public class LivroService : ILivroService
         entity.AnoPublicacao = dto.AnoPublicacao;
 
         await _repo.UpdateAsync(entity);
-        return dto;
+        return ApiResponse<LivroDto>.Created(dto, "Autor criado com sucesso.");
     }
 
-    public async Task DeleteAsync(int id) => await _repo.DeleteAsync(id);
+    public async Task<ApiResponse<bool>> DeleteAsync(int id)
+    {
+        var livro = await _repo.GetByIdAsync(id);
+        if (livro == null)
+            return ApiResponse<bool>.NotFound($"Autor ID {id} não encontrado.");
+
+        await _repo.DeleteAsync(id);
+        return ApiResponse<bool>.Ok(true, "Livro excluído com sucesso.");
+    }
 }
