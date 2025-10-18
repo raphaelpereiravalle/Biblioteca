@@ -17,6 +17,7 @@ jobs:
     defaults:
       run:
         working-directory: ./backend
+
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
@@ -25,10 +26,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-          cache: 'nuget'
-          cache-dependency-path: ./**/packages.lock.json
+          cache: 'nuget'  # habilita cache automático de pacotes NuGet
 
-      - name: Restaure
+      - name: Restaure dependências
         run: dotnet restore ./src/Biblioteca.Api/Biblioteca.Api.csproj
 
       - name: Build
@@ -37,10 +37,11 @@ jobs:
       - name: Test
         run: dotnet test ./tests/Biblioteca.Tests/Biblioteca.Tests.csproj --no-build
 
-      - name: Publish
+      - name: Publicar artefatos
         run: dotnet publish ./src/Biblioteca.Api/Biblioteca.Api.csproj -c Release -o ./publish
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload artefato (build .NET)
+        uses: actions/upload-artifact@v4
         with:
           name: biblioteca-api
           path: ./publish
