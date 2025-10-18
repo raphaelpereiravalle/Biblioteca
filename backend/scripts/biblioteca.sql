@@ -1,0 +1,2 @@
+-- Coloque aqui o script da Parte 1 (criação do banco, tabelas e view).
+-- Mantido resumido para o pacote. Você pode substituir pelo script completo conforme enviado anteriormente.

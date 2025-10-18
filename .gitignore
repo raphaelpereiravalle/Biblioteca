@@ -1,0 +1,66 @@
+## ======== VISUAL STUDIO / .NET ======== ##
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Build results ##
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+TestResults/
+BenchmarkDotNet.Artifacts/
+
+## Tooling ##
+*.dbmdl
+*.bak
+*.cache
+*.pdb
+*.mdb
+*.opendb
+*.svclog
+*.vsp
+*.vspx
+*.pidb
+*.scc
+
+## DotNet ##
+project.lock.json
+project.fragment.lock.json
+artifacts/
+AppPackages/
+BundleArtifacts/
+_Packaging/
+
+## EF Migrations ##
+Migrations/
+
+## Publish ##
+*.publish.xml
+*.azurePubxml
+publish/
+publishprofiles/
+Generated_Code/
+
+## IIS / Web ##
+iisexpress/
+*.vspscc
+*.csproj.user
+*.psess
+*.psess
+*.vsp
+*.vspx
+*.db
+*.bak
+
+## Configuratio

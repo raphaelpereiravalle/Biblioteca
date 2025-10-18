@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <rd:ReportUnitType>Mm</rd:ReportUnitType>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource1">
+      <DataSourceReference>DataSource1</DataSourceReference>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="DataSetLivroValor">
+      <Fields>
+        <Field Name="IdLivroValor"><DataField>IdLivroValor</DataField></Field>
+        <Field Name="Titulo"><DataField>Titulo</DataField></Field>
+        <Field Name="TipoVenda"><DataField>TipoVenda</DataField></Field>
+        <Field Name="Valor"><DataField>Valor</DataField></Field>
+      </Fields>
+      <Query><DataSourceName>DataSource1</DataSourceName><CommandText>/* local */</CommandText></Query>
+    </DataSet>
+  </DataSets>
+  <Body>
+    <ReportItems>
+      <Textbox Name="TituloRelatorio">
+        <Top>0mm</Top><Left>0mm</Left><Height>10mm</Height><Width>190mm</Width>
+        <CanGrow>true</CanGrow><KeepTogether>true</KeepTogether>
+        <Paragraphs><Paragraph><TextRuns><TextRun><Value>Relatório de Livros e Valores</Value><Style><FontSize>16pt</FontSize><FontWeight>Bold</FontWeight><Color>#0D47A1</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs>
+      </Textbox>
+      <Tablix Name="TabelaPrincipal">
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn><Width>30mm</Width></TablixColumn>
+            <TablixColumn><Width>80mm</Width></TablixColumn>
+            <TablixColumn><Width>35mm</Width></TablixColumn>
+            <TablixColumn><Width>25mm</Width></TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>8mm</Height>
+              <TablixCells>
+                <TablixCell><CellContents><Textbox Name="hId"><Paragraphs><Paragraph><TextRuns><TextRun><Value>Código Valor</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs><Style><BackgroundColor>#0D47A1</BackgroundColor><Color>White</Color></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="hTitulo"><Paragraphs><Paragraph><TextRuns><TextRun><Value>Título Livro</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs><Style><BackgroundColor>#0D47A1</BackgroundColor><Color>White</Color></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="hTipo"><Paragraphs><Paragraph><TextRuns><TextRun><Value>Tipo Venda</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs><Style><BackgroundColor>#0D47A1</BackgroundColor><Color>White</Color></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="hValor"><Paragraphs><Paragraph><TextRuns><TextRun><Value>Valor (R$)</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs><Style><BackgroundColor>#0D47A1</BackgroundColor><Color>White</Color></Style></Textbox></CellContents></TablixCell>
+              </TablixCells>
+            </TablixRow>
+            <TablixRow>
+              <Height>7mm</Height>
+              <TablixCells>
+                <TablixCell><CellContents><Textbox Name="cId"><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!IdLivroValor.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs><Style><Border><Color>Gainsboro</Color><Style>Solid</Style></Border></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="cTitulo"><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Titulo.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs><Style><Border><Color>Gainsboro</Color><Style>Solid</Style></Border></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="cTipo"><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!TipoVenda.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs><Style><Border><Color>Gainsboro</Color><Style>Solid</Style></Border></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="cValor"><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Valor.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs><Style><TextAlign>Right</TextAlign><Border><Color>Gainsboro</Color><Style>Solid</Style></Border></Style></Textbox></CellContents></TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <DataSetName>DataSetLivroValor</DataSetName>
+        <Top>15mm</Top><Left>10mm</Left><Height>20mm</Height><Width>170mm</Width>
+      </Tablix>
+    </ReportItems>
+    <Height>60mm</Height>
+  </Body>
+  <Width>210mm</Width>
+  <Page><LeftMargin>10mm</LeftMargin><RightMargin>10mm</RightMargin><TopMargin>10mm</TopMargin><BottomMargin>10mm</BottomMargin></Page>
+</Report>
