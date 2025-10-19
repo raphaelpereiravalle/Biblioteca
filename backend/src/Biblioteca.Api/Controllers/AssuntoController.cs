@@ -35,7 +35,7 @@ public class AssuntoController : ControllerBase
         }
     }
 
-    [HttpGet("obter-assunto{id:int}")]
+    [HttpGet("obter-assunto/{id:int}")]
     [ProducesResponseType(typeof(AssuntoDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]

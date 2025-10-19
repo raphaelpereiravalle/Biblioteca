@@ -1,0 +1,49 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div class="input-group" style="max-width: 420px">
+    <input class="form-control" placeholder="Buscar..." [(ngModel)]="pesquisa" (keyup.enter)="carregar()" />
+    <button class="btn btn-outline-secondary" (click)="carregar()">Buscar</button>
+    <button class="btn btn-outline-secondary" (click)="limpar()">Limpar</button>
+  </div>
+  <button class="btn btn-primary" (click)="novo()">Novo</button>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-striped mb-0">
+        <thead class="table-light">
+          <tr>
+            <th style="width: 100px">ID</th>
+            <th>Livro (ID)</th>
+            <th>Tipo</th>
+            <th>Valor (R$)</th>
+            <th style="width: 140px" class="text-end">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let it of itens">
+            <td>{{ it.idLivroValor }}</td>
+            <td>{{ it.idLivro }}</td>
+            <td>{{ it.tipoVenda }}</td>
+            <td>{{ it.valor | number : '1.2-2' }}</td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-secondary me-2" (click)="editar(it.idLivroValor)">Editar</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="confirmarExcluir(it.idLivroValor)">Excluir</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card-footer d-flex justify-content-between align-items-center">
+    <div>Exibindo página {{ pageNumber }} de {{ totalPages }} ({{ totalCount }} itens)</div>
+    <div class="btn-group">
+      <button class="btn btn-outline-secondary" [disabled]="pageNumber === 1" (click)="paginaAnterior()">
+        Anterior
+      </button>
+      <button class="btn btn-outline-secondary" [disabled]="pageNumber === totalPages" (click)="proximaPagina()">
+        Próxima
+      </button>
+    </div>
+  </div>
+</div>

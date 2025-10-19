@@ -1,0 +1,1 @@
+Projeto Angular 12 PRO + Relatórios. API: https://localhost:5001/api (fallback http://localhost:5000/api)

@@ -20,10 +20,10 @@ public class LivroValorService : ILivroValorService
         if (pageNumber <= 0) pageNumber = 1;
         if (pageSize <= 0) pageSize = 10;
 
-        var all = await _repo.GetAllAsync();
-        var total = all.Count();
+        var livroValors = await _repo.GetAllAsync();
+        var total = livroValors.Count();
 
-        var items = all
+        var items = livroValors
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(v => new LivroValorDto
@@ -56,7 +56,7 @@ public class LivroValorService : ILivroValorService
         var v = await _repo.GetByIdAsync(id);
 
         if (v == null)
-            return ApiResponse<LivroValorDto?>.NotFound($"LivroValor com ID {id} não encontrado.");
+            return ApiResponse<LivroValorDto?>.NotFound($"ID {id} não encontrado.");
 
         var dto = new LivroValorDto
         {

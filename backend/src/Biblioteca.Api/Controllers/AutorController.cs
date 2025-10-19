@@ -22,7 +22,7 @@ public class AutorController : ControllerBase
     // GET: api/autor?pageNumber=1&pageSize=10
     [HttpGet("listar-autores")]
     [ProducesResponseType(typeof(PagedResult<AutorDto>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> listarAutores([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> ListarAutores([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         try
         {
@@ -40,7 +40,7 @@ public class AutorController : ControllerBase
     [ProducesResponseType(typeof(AutorDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> ObterAutorPorId(int id)
     {
         try
         {
@@ -69,7 +69,7 @@ public class AutorController : ControllerBase
                 return ValidationProblem(ModelState);
 
             var autor = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = autor.Data.IdAutor }, autor);
+            return CreatedAtAction(nameof(ObterAutorPorId), new { id = autor.Data.IdAutor }, autor);
         }
         catch (Exception ex)
         {
@@ -78,7 +78,7 @@ public class AutorController : ControllerBase
         }
     }
 
-    [HttpPut("editar-autor{id:int}")]
+    [HttpPut("editar-autor/{id:int}")]
     [ProducesResponseType(typeof(AutorDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]

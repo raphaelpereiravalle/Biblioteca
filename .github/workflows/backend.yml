@@ -25,17 +25,18 @@ jobs:
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
-          cache: 'nuget'  # habilita cache automático de pacotes NuGet
+          dotnet-version: '8.x'
+          cache: true
+          cache-dependency-path: ./src/**/packages.lock.json
 
       - name: Restaure dependências
-        run: dotnet restore ./src/Biblioteca.Api/Biblioteca.Api.csproj
+        run: dotnet restore ./src/Biblioteca.sln
 
       - name: Build
-        run: dotnet build ./src/Biblioteca.Api/Biblioteca.Api.csproj -c Release --no-restore
+        run: dotnet build ./src/Biblioteca.sln -c Release --no-restore
 
       - name: Test
-        run: dotnet test ./tests/Biblioteca.Tests/Biblioteca.Tests.csproj --no-build
+        run: dotnet test --no-build --no-restore ./src/Biblioteca.sln --logger trx --results-directory TestResults"
 
       - name: Publicar artefatos
         run: dotnet publish ./src/Biblioteca.Api/Biblioteca.Api.csproj -c Release -o ./publish

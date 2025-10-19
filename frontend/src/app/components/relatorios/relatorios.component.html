@@ -1,0 +1,10 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title mb-3">Relatórios</h4>
+    <p>Gere os relatórios em PDF a partir da API.</p>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-primary" (click)="baixarLivros()" [disabled]="loading">📘 Relatório de Livros</button>
+      <button class="btn btn-outline-secondary" (click)="baixarAutores()" [disabled]="loading">✍️ Relatório de Autores</button>
+    </div>
+  </div>
+</div>

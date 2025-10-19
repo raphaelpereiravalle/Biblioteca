@@ -36,7 +36,7 @@ public class LivroValorController : ControllerBase
         }
     }
 
-    [HttpGet("obter-livro-valor{id:int}")]
+    [HttpGet("obter-livro-valor/{id:int}")]
     [ProducesResponseType(typeof(LivroValorDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -78,7 +78,7 @@ public class LivroValorController : ControllerBase
         }
     }
 
-    [HttpPut("editar-livro-valor{id:int}")]
+    [HttpPut("editar-livro-valor/{id:int}")]
     [ProducesResponseType(typeof(LivroValorDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -103,7 +103,7 @@ public class LivroValorController : ControllerBase
         }
     }
 
-    [HttpDelete("deletar-livro-valor{id:int}")]
+    [HttpDelete("deletar-livro-valor/{id:int}")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]

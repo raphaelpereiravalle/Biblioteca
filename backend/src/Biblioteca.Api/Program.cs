@@ -31,26 +31,28 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<BibliotecaContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-
-
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IAssuntoService, AssuntoService>();
 builder.Services.AddScoped<IAutorService, AutorService>();
 builder.Services.AddScoped<ILivroService, LivroService>();
 builder.Services.AddScoped<ILivroValorService, LivroValorService>();
 
-
 builder.Services.AddValidatorsFromAssemblyContaining<AssuntoDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<AutorDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<LivroValorDtoValidator>();
 
-
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 
-builder.Services.AddCors(p => p.AddPolicy("AllowAll",
-    b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy
+            .WithOrigins("http://localhost:4200") // origem do Angular
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
 
 
 var app = builder.Build();
@@ -64,6 +66,7 @@ var app = builder.Build();
     });
 //}
 
+app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

@@ -1,0 +1,20 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title mb-3">{{id ? 'Editar' : 'Novo'}} Assunto</h4>
+    <form [formGroup]="form" (ngSubmit)="salvar()">
+
+    <div class="mb-3">
+      <label class="form-label">Descrição</label>
+      <input class="form-control" formControlName="descricao" />
+      <div *ngIf="form.get('descricao')?.invalid && form.get('descricao')?.touched" class="text-danger small">
+        Descrição é obrigatória.
+      </div>
+    </div>
+  
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-primary" [disabled]="form.invalid">Salvar</button>
+        <button type="button" class="btn btn-secondary" (click)="voltar()">Voltar</button>
+      </div>
+    </form>
+  </div>
+</div>
