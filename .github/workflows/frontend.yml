@@ -1,0 +1,45 @@
+name: Build & Test Angular Frontend
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build Angular App
+
+    steps:
+      # Faz checkout do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Configura Node.js (versão compatível com Angular 12)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          cache: 'npm'
+
+      # Instala dependências
+      - name: Install dependencies
+        run: npm ci
+
+      # Build de produção
+      - name: Build production
+        run: npm run build --if-present
+
+      # Executa testes unitários (opcional)
+      - name: Run tests
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+        continue-on-error: true
+
+      # Publica artefatos de build
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: dist/frontend-reports
