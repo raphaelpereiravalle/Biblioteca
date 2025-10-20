@@ -5,7 +5,7 @@
   },
   "version": 1,
   "projects": {
-    "frontend-reports": {
+    "frontend": {
       "projectType": "application",
       "root": "",
       "sourceRoot": "src",
@@ -14,7 +14,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/frontend-reports",
+            "outputPath": "dist/frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -53,16 +53,17 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "frontend-reports:build"
+            "port": 4200,
+            "browserTarget": "frontend:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "frontend-reports:build:production"
+              "browserTarget": "frontend:build:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "frontend-reports"
+  "defaultProject": "frontend"
 }

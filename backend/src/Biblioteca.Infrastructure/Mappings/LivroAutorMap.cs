@@ -8,7 +8,7 @@ namespace Biblioteca.Infrastructure.Mappings
     {
         public void Configure(EntityTypeBuilder<LivroAutor> entity)
         {
-            entity.ToTable("Livro_Autor");
+            entity.ToTable("LivroAutor");
 
             entity.HasKey(e => new { e.IdLivro, e.IdAutor });
 
@@ -20,15 +20,13 @@ namespace Biblioteca.Infrastructure.Mappings
                   .HasColumnName("IdAutor")
                   .IsRequired();
 
-            entity.HasOne<Livro>()
-                  .WithMany()
-                  .HasForeignKey(e => e.IdLivro)
-                  .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.Livro)
+                .WithMany(l => l.LivroAutores)
+                .HasForeignKey(e => e.IdLivro);
 
-            entity.HasOne<Autor>()
-                  .WithMany()
-                  .HasForeignKey(e => e.IdAutor)
-                  .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.Autor)
+                .WithMany(a => a.LivroAutores)
+                .HasForeignKey(e => e.IdAutor);
         }
     }
 }

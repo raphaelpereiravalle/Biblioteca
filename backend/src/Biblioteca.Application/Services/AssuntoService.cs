@@ -31,6 +31,7 @@ public class AssuntoService : IAssuntoService
                 IdAssunto = a.IdAssunto,
                 Descricao = a.Descricao
             })
+            .OrderBy(a => a.IdAssunto)
             .ToList();
 
         var paged = new PagedResult<AssuntoDto>

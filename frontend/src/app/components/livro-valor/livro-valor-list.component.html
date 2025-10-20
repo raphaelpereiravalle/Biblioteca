@@ -27,8 +27,8 @@
             <td>{{ it.tipoVenda }}</td>
             <td>{{ it.valor | number : '1.2-2' }}</td>
             <td class="text-end">
-              <button class="btn btn-sm btn-outline-secondary me-2" (click)="editar(it.idLivroValor)">Editar</button>
-              <button class="btn btn-sm btn-outline-danger" (click)="confirmarExcluir(it.idLivroValor)">Excluir</button>
+              <button class="btn btn-sm btn-primary me-2" (click)="editar(it.idLivroValor)">Editar</button>
+              <button class="btn btn-sm btn-danger" (click)="confirmarExcluir(it.idLivroValor)">Excluir</button>
             </td>
           </tr>
         </tbody>
@@ -38,10 +38,8 @@
   <div class="card-footer d-flex justify-content-between align-items-center">
     <div>Exibindo página {{ pageNumber }} de {{ totalPages }} ({{ totalCount }} itens)</div>
     <div class="btn-group">
-      <button class="btn btn-outline-secondary" [disabled]="pageNumber === 1" (click)="paginaAnterior()">
-        Anterior
-      </button>
-      <button class="btn btn-outline-secondary" [disabled]="pageNumber === totalPages" (click)="proximaPagina()">
+      <button class="btn btn-secondary" [disabled]="pageNumber === 1" (click)="paginaAnterior()">Anterior</button>
+      <button class="btn btn-secondary" [disabled]="pageNumber === totalPages" (click)="proximaPagina()">
         Próxima
       </button>
     </div>

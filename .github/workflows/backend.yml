@@ -26,8 +26,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
-          cache: true
-          cache-dependency-path: ./src/**/packages.lock.json
+          # Se não tiver packages.lock.json, remova o cache
+          # cache: true
+          # cache-dependency-path: ./src/**/packages.lock.json
 
       - name: Restaure dependências
         run: dotnet restore ./src/Biblioteca.sln
@@ -36,7 +37,7 @@ jobs:
         run: dotnet build ./src/Biblioteca.sln -c Release --no-restore
 
       - name: Test
-        run: dotnet test --no-build --no-restore ./src/Biblioteca.sln --logger trx --results-directory TestResults"
+        run: dotnet test ./src/Biblioteca.sln -c Release --no-build --no-restore --logger trx --results-directory ./TestResults
 
       - name: Publicar artefatos
         run: dotnet publish ./src/Biblioteca.Api/Biblioteca.Api.csproj -c Release -o ./publish
@@ -45,4 +46,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: biblioteca-api
-          path: ./publish
+          path: backend/publish

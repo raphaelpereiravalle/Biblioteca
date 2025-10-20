@@ -28,8 +28,12 @@ builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<BibliotecaContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<BibliotecaContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sql => sql.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery) // ?? Aqui
+    )
+);
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IAssuntoService, AssuntoService>();
@@ -44,11 +48,13 @@ builder.Services.AddValidatorsFromAssemblyContaining<LivroValorDtoValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 
+var frontendUrl = builder.Configuration["Frontend:BaseUrl"];
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy => policy
-            .WithOrigins("http://localhost:4200") // origem do Angular
+            .WithOrigins(frontendUrl) // origem do Angular
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
@@ -57,14 +63,14 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-//if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment()) { 
  app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "Biblioteca API v1");
         options.RoutePrefix = "swagger";
     });
-//}
+}
 
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
