@@ -1,9 +1,10 @@
 ﻿using Biblioteca.Infrastructure.Data;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stimulsoft.Report;
 using System.Reflection.Metadata;
-using System.Xml.Linq;
 
 namespace Biblioteca.Api.Controllers
 {
@@ -18,15 +19,11 @@ namespace Biblioteca.Api.Controllers
         {
             _context = context;
             _env = env;
-            // A atribuição da licença deve ser feita em um ponto de entrada da aplicação, como Program.cs, e não no construtor do controlador.
-            // Para versões de teste, a atribuição vazia pode ser necessária, mas idealmente deve ser configurada globalmente.
-            // StiLicense.Key = "";
         }
 
 
-        [HttpGet("relatorio")]
+        [HttpGet("relatorio-livros")]
         public async Task<IActionResult> ObterRelatorioLivros()
-
         {
             var dados = await _context.Livros
                 .Include(l => l.LivroAutores).ThenInclude(la => la.Autor)
@@ -44,52 +41,230 @@ namespace Biblioteca.Api.Controllers
                 .AsSplitQuery()
                 .ToListAsync();
 
-            if (!dados.Any())
+            if (dados == null || !dados.Any())
                 return NotFound("Nenhum livro encontrado.");
 
             using var stream = new MemoryStream();
-            var document = new Document(PageSize.A4);
-            var writer = PdfWriter.GetInstance(document, stream);
-            document.Open();
 
-            // 🔹 Cabeçalho
-            var titulo = new Paragraph("Relatório de Livros", new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD));
-            titulo.Alignment = Element.ALIGN_CENTER;
-            document.Add(titulo);
-            document.Add(new Paragraph("\n"));
-
-            // 🔹 Tabela
-            var tabela = new PdfPTable(6); // 6 colunas
-            tabela.WidthPercentage = 100;
-            tabela.SetWidths(new float[] { 20, 25, 20, 15, 10, 10 });
-
-            // Cabeçalhos
-            string[] cabecalhos = { "Autor", "Título", "Assunto", "Editora", "Tipo Venda", "Valor" };
-            foreach (var cab in cabecalhos)
+            // 🔹 Configuração básica do documento
+            using (var document = new iTextSharp.text.Document(PageSize.A4, 36, 36, 36, 36)) // margens: left, right, top, bottom
             {
-                var cell = new PdfPCell(new Phrase(cab, new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD)));
-                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
-                tabela.AddCell(cell);
+                var writer = PdfWriter.GetInstance(document, stream);
+                document.Open();
+
+                // 🔹 Cabeçalho
+                var fontTitulo = new Font(Font.HELVETICA, 16, Font.BOLD);
+                var titulo = new Paragraph("Relatório de Livros", fontTitulo)
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 10f
+                };
+                document.Add(titulo);
+
+                // 🔹 Fonte padrão para texto
+                var fontPadrao = new Font(Font.HELVETICA, 10, Font.NORMAL);
+
+                // 🔹 Tabela de dados
+                var tabela = new PdfPTable(6) { WidthPercentage = 100 };
+                tabela.SetWidths(new float[] { 20, 25, 20, 15, 10, 10 });
+
+                // Cabeçalhos
+                string[] cabecalhos = { "Autor", "Título", "Assunto", "Editora", "Tipo Venda", "Valor" };
+                foreach (var cab in cabecalhos)
+                {
+                    var cellHeader = new PdfPCell(new Phrase(cab, new Font(Font.HELVETICA, 10, Font.BOLD, BaseColor.White)))
+                    {
+                        BackgroundColor = new BaseColor(0, 70, 140),
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        Padding = 5
+                    };
+                    tabela.AddCell(cellHeader);
+                }
+
+                // Linhas
+                foreach (var item in dados)
+                {
+                    tabela.AddCell(new PdfPCell(new Phrase(item.Autor ?? "", fontPadrao)) { Padding = 4 });
+                    tabela.AddCell(new PdfPCell(new Phrase(item.Titulo ?? "", fontPadrao)) { Padding = 4 });
+                    tabela.AddCell(new PdfPCell(new Phrase(item.Assunto ?? "", fontPadrao)) { Padding = 4 });
+                    tabela.AddCell(new PdfPCell(new Phrase(item.Editora ?? "", fontPadrao)) { Padding = 4 });
+                    tabela.AddCell(new PdfPCell(new Phrase(item.TipoVenda ?? "", fontPadrao)) { Padding = 4 });
+                    tabela.AddCell(new PdfPCell(new Phrase(item.Valor.ToString("C2"), fontPadrao)) { Padding = 4, HorizontalAlignment = Element.ALIGN_RIGHT });
+                }
+
+                document.Add(tabela);
+                document.Close();
+                writer.Close();
             }
 
-            // Linhas
-            foreach (var item in dados)
-            {
-                tabela.AddCell(new Phrase(item.Autor ?? ""));
-                tabela.AddCell(new Phrase(item.Titulo ?? ""));
-                tabela.AddCell(new Phrase(item.Assunto ?? ""));
-                tabela.AddCell(new Phrase(item.Editora ?? ""));
-                tabela.AddCell(new Phrase(item.TipoVenda ?? ""));
-                tabela.AddCell(new Phrase(item.Valor.ToString("C2")));
-            }
-
-            document.Add(tabela);
-            document.Close();
-            writer.Close();
-
+            stream.Position = 0;
             return File(stream.ToArray(), "application/pdf", "relatorio-livros.pdf");
         }
 
+
+        [HttpGet("relatorio-livro-valores")]
+        public async Task<IActionResult> ObterRelatorioLivroValores()
+        {
+            var dados = await _context.LivroValores
+                .Include(v => v.Livro)
+                .Select(v => new
+                {
+                    Livro = v.Livro.Titulo,
+                    TipoVenda = v.TipoVenda,
+                    Valor = v.Valor
+                })
+                .AsSplitQuery()
+                .ToListAsync();
+
+            if (dados == null || !dados.Any())
+                return NotFound("Nenhum registro de valor encontrado.");
+
+            using var stream = new MemoryStream();
+
+            using (var document = new iTextSharp.text.Document(PageSize.A4, 36, 36, 36, 36))
+            {
+                var writer = PdfWriter.GetInstance(document, stream);
+                document.Open();
+
+                // 🔹 Cabeçalho
+                var fontTitulo = new Font(Font.HELVETICA, 16, Font.BOLD);
+                var titulo = new Paragraph("Relatório de Valores dos Livros", fontTitulo)
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 10f
+                };
+                document.Add(titulo);
+
+                // 🔹 Fonte padrão
+                var fontPadrao = new Font(Font.HELVETICA, 10, Font.NORMAL);
+
+                // 🔹 Tabela
+                var tabela = new PdfPTable(4) { WidthPercentage = 100 };
+                tabela.SetWidths(new float[] { 40, 25, 15, 20 }); // Ajuste proporcional das colunas
+
+                // Cabeçalhos
+                string[] cabecalhos = { "Livro", "Tipo de Venda", "Valor", "Data Cadastro" };
+                foreach (var cab in cabecalhos)
+                {
+                    var cellHeader = new PdfPCell(new Phrase(cab, new Font(Font.HELVETICA, 10, Font.BOLD, BaseColor.White)))
+                    {
+                        BackgroundColor = new BaseColor(0, 70, 140),
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        Padding = 5
+                    };
+                    tabela.AddCell(cellHeader);
+                }
+
+                // Linhas
+                foreach (var item in dados)
+                {
+                    tabela.AddCell(new PdfPCell(new Phrase(item.Livro ?? "", fontPadrao)) { Padding = 4 });
+                    tabela.AddCell(new PdfPCell(new Phrase(item.TipoVenda ?? "", fontPadrao)) { Padding = 4 });
+                    tabela.AddCell(new PdfPCell(new Phrase(item.Valor.ToString("C2"), fontPadrao))
+                    {
+                        Padding = 4,
+                        HorizontalAlignment = Element.ALIGN_RIGHT
+                    });
+                }
+
+                document.Add(tabela);
+
+                // 🔹 Rodapé opcional
+                document.Add(new Paragraph($"\nGerado em: {DateTime.Now:dd/MM/yyyy HH:mm}", new Font(Font.HELVETICA, 8, Font.ITALIC))
+                {
+                    Alignment = Element.ALIGN_RIGHT
+                });
+
+                document.Close();
+                writer.Close();
+            }
+
+            stream.Position = 0;
+            return File(stream.ToArray(), "application/pdf", "relatorio-livro-valores.pdf");
+        }
+
+        [HttpGet("relatorio-autores")]
+        public async Task<IActionResult> ObterRelatorioAutores()
+        {
+            var dados = await _context.Autores
+                .Include(a => a.LivroAutores)
+                    .ThenInclude(la => la.Livro)
+                .Select(a => new
+                {
+                    Nome = a.Nome,
+                    QuantidadeLivros = a.LivroAutores.Count,
+                    Livros = string.Join(", ", a.LivroAutores.Select(l => l.Livro.Titulo))
+                })
+                .AsSplitQuery()
+                .OrderBy(a => a.Nome)
+                .ToListAsync();
+
+            if (dados == null || !dados.Any())
+                return NotFound("Nenhum autor encontrado.");
+
+            using var stream = new MemoryStream();
+
+            using (var document = new iTextSharp.text.Document(PageSize.A4, 36, 36, 36, 36))
+            {
+                var writer = PdfWriter.GetInstance(document, stream);
+                document.Open();
+
+                // 🔹 Cabeçalho
+                var fontTitulo = new Font(Font.HELVETICA, 16, Font.BOLD);
+                var titulo = new Paragraph("Relatório de Autores", fontTitulo)
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 10f
+                };
+                document.Add(titulo);
+
+                // 🔹 Fonte padrão
+                var fontPadrao = new Font(Font.HELVETICA, 10, Font.NORMAL);
+
+                // 🔹 Tabela
+                var tabela = new PdfPTable(3) { WidthPercentage = 100 };
+                tabela.SetWidths(new float[] { 25, 10, 65 }); // Nome / Qtd / Livros
+
+                // Cabeçalhos
+                string[] cabecalhos = { "Autor", "Qtd. Livros", "Títulos" };
+                foreach (var cab in cabecalhos)
+                {
+                    var cellHeader = new PdfPCell(new Phrase(cab, new Font(Font.HELVETICA, 10, Font.BOLD, BaseColor.White)))
+                    {
+                        BackgroundColor = new BaseColor(0, 70, 140),
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        Padding = 5
+                    };
+                    tabela.AddCell(cellHeader);
+                }
+
+                // Linhas
+                foreach (var item in dados)
+                {
+                    tabela.AddCell(new PdfPCell(new Phrase(item.Nome ?? "", fontPadrao)) { Padding = 4 });
+                    tabela.AddCell(new PdfPCell(new Phrase(item.QuantidadeLivros.ToString(), fontPadrao))
+                    {
+                        Padding = 4,
+                        HorizontalAlignment = Element.ALIGN_CENTER
+                    });
+                    tabela.AddCell(new PdfPCell(new Phrase(item.Livros ?? "-", fontPadrao)) { Padding = 4 });
+                }
+
+                document.Add(tabela);
+
+                // 🔹 Rodapé
+                document.Add(new Paragraph($"\nGerado em: {DateTime.Now:dd/MM/yyyy HH:mm}", new Font(Font.HELVETICA, 8, Font.ITALIC))
+                {
+                    Alignment = Element.ALIGN_RIGHT
+                });
+
+                document.Close();
+                writer.Close();
+            }
+
+            stream.Position = 0;
+            return File(stream.ToArray(), "application/pdf", "relatorio-autores.pdf");
+        }
 
         [HttpGet("exportar")]
         public async Task<IActionResult> Exportar([FromQuery] string formato = "PDF")

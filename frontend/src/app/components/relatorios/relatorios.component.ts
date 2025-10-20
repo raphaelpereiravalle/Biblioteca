@@ -26,6 +26,21 @@ export class RelatoriosComponent {
     })
   }
 
+  baixarRelatorioValores() {
+    this.loading = true
+    this.service.getRelatorioLivroValores().subscribe({
+      next: (blob) => {
+        downloadBlob(blob, 'relatorio-livro-valores.pdf')
+        this.toast.success('Relatório de valores gerado.')
+        this.loading = false
+      },
+      error: (_) => {
+        this.toast.error('Falha ao gerar relatório de valores.')
+        this.loading = false
+      },
+    })
+  }
+
   baixarAutores() {
     this.loading = true
     this.service.getRelatorioAutores().subscribe({

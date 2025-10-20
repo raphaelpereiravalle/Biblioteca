@@ -10,10 +10,14 @@ export class RelatorioService {
   constructor(private http: HttpClient) {}
 
   getRelatorioLivros(): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/relatorio`, { responseType: 'blob' })
+    return this.http.get(`${this.apiUrl}/relatorio-livros`, { responseType: 'blob' })
   }
 
   getRelatorioAutores(): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/exportar`, { responseType: 'blob' })
+    return this.http.get(`${this.apiUrl}/relatorio-autores`, { responseType: 'blob' })
+  }
+
+  getRelatorioLivroValores() {
+    return this.http.get(`${this.apiUrl}/relatorio-livro-valores`, { responseType: 'blob' })
   }
 }
