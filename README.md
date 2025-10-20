@@ -170,11 +170,11 @@ npm run build
 ng generate component nome-componente
 ```
 
----
-
 ### Banco de Dados (SQL Server)
+
 ```bash
 Copie e cole o seguinte script no editor de consultas: Pasta script - biblioteca.sql
+
 ---
 
 ## 🧪 Testes
