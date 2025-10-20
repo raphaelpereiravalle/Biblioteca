@@ -1,6 +1,6 @@
 # 📚 Biblioteca TJRJ
 
-Sistema completo para gerenciamento de biblioteca, com backend em .NET 8, frontend em Angular 17 e banco de dados SQL Server.  
+Sistema completo para gerenciamento de biblioteca, com backend em .NET 8, frontend em Angular 17 e banco de dados SQL Server.
 O projeto foi desenvolvido com foco em arquitetura limpa, boas práticas e integração entre camadas (API RESTful + Frontend SPA).
 
 ---
@@ -116,7 +116,7 @@ dotnet build
 dotnet run
 ```
 
-A API estará disponível em:  
+A API estará disponível em:
 👉 **https://localhost:5001/swagger**
 
 ---
@@ -129,10 +129,10 @@ npm install
 ng serve
 ```
 
-A aplicação estará disponível em:  
+A aplicação estará disponível em:
 👉 **http://localhost:4200**
 
-> ⚠️ Certifique-se de que o backend está rodando antes de iniciar o frontend.  
+> ⚠️ Certifique-se de que o backend está rodando antes de iniciar o frontend.
 > Caso ocorra erro de **CORS**, confirme que o `AllowAnyOrigin()` está habilitado no `Program.cs`.
 
 ---
@@ -153,9 +153,15 @@ A aplicação estará disponível em:
 
 ### Backend
 ```bash
-dotnet ef migrations add InitialCreate
-dotnet ef database update
-dotnet test
+dotnet restore
+dotnet build
+dotnet run
+
+Por padrão, sobe em:
+https://localhost:5001
+http://localhost:5000
+
+4️⃣ Rodar com ambiente de desenv
 ```
 
 ### Frontend
@@ -164,6 +170,11 @@ npm run build
 ng generate component nome-componente
 ```
 
+---
+
+### Banco de Dados (SQL Server)
+```bash
+Copie e cole o seguinte script no editor de consultas: Pasta script - biblioteca.sql
 ---
 
 ## 🧪 Testes
@@ -178,30 +189,15 @@ ng generate component nome-componente
 
 ---
 
-## 🧱 7️⃣ Docker (Opcional)
-
-Caso deseje subir via Docker:
-
-```bash
-docker-compose up --build
-```
-
-O `docker-compose.yml` sobe:
-- API em .NET
-- Banco SQL Server
-- Aplicação Angular
-
----
-
 ## 📄 Licença
 
-Este projeto está sob a licença **MIT**.  
+Este projeto está sob a licença **MIT**.
 Sinta-se livre para usar e modificar conforme necessário.
 
 ---
 
 ## 👨‍💻 Autor
 
-**Raphael Pereira Valle**  
-📧 seuemail@exemplo.com  
+**Raphael Pereira Valle**
+📧 seuemail@exemplo.com
 🔗 https://github.com/seu-usuario
